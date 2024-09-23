@@ -33,6 +33,7 @@ public class UserService {
     }
 
     public Mono<User> update(String id, User user) {
+        // todo имя обнавляет
         return userRepository.findById(id).flatMap(updateUser -> {
             if(StringUtils.hasText(user.getEmail())) {
                 updateUser.setEmail(user.getEmail());

@@ -8,5 +8,5 @@ import java.util.Set;
 
 public interface TaskRepository extends ReactiveMongoRepository<Task, String> {
 
-    Flux<Task> findAllByObserverIds(Set<String> observerIds);
+    //Flux<Task> findAllByObserverIds(Set<String> observerIds);
 }

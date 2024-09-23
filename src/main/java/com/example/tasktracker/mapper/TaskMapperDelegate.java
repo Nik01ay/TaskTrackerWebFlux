@@ -17,7 +17,7 @@ public abstract class TaskMapperDelegate implements TaskMapper {
         task.setId(request.getId());
         task.setName(request.getName());
         task.setDescription(request.getDescription());
-
+        task.setStatus(request.getStatus());
         if (request.getCreatedAt() != null) {
             task.setCreatedAt(request.getCreatedAt());
         } else {

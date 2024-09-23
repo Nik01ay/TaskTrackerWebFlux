@@ -20,12 +20,14 @@ public class TaskController {
 
     @GetMapping
     public Flux<TaskModel> getAll(){
+        System.out.println("GET ALL");
         return taskService.findAll()
                 .map(taskMapper::taskToResponse);
     }
 
     @GetMapping("/{id}")
     public Mono<ResponseEntity<TaskModel>> getById(@PathVariable String id) {
+
         return taskService.findById(id)
                 .map(taskMapper::taskToResponse)
                 .map(ResponseEntity::ok)
@@ -34,6 +36,8 @@ public class TaskController {
 
     @PostMapping
     public Mono<ResponseEntity<TaskModel>> create(@RequestBody TaskModel taskModel) {
+        System.out.println("POST");
+        System.out.println(taskModel.toString());
         return taskService.save(taskMapper.requestToTask(taskModel))
                 .map(taskMapper::taskToResponse)
                 .map(ResponseEntity::ok);

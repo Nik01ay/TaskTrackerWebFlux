@@ -1,6 +1,7 @@
 package com.example.tasktracker.service;
 
 import com.example.tasktracker.entity.Task;
+//import com.example.tasktracker.handler.TaskHandler;
 import com.example.tasktracker.handler.TaskHandler;
 import com.example.tasktracker.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,12 @@ public class TaskService {
     private final TaskHandler taskHandler;
 
     public Flux<Task> findAll() {
-        return taskRepository.findAll().flatMap(taskHandler::handleTask);
+        return taskRepository.findAll().flatMap(
+                task -> {
+                    System.out.println("taskId= " + task.getId());
+                    return taskHandler.handleTask(task);
+                })
+                ;
     }
 
     public Mono<Task> findById(String id) {
@@ -32,17 +38,18 @@ public class TaskService {
     public Mono<Task> save(Task task) {
         task.setCreatedAt(Instant.now());
         task.setUpdatedAt(Instant.now());
+        System.out.println(task);
 
         Mono<Task> taskToSave = taskRepository.save(task);
 
-        return taskHandler.handleTask(task, taskToSave);
+        return  taskHandler.handleTask(task, taskToSave);
     }
 
     public Mono<Task> update(String id, Task task) {
         return taskRepository.findById(id).flatMap(taskForUpdate -> {
             taskForUpdate.setId(task.getId());
             taskForUpdate.setName(task.getName());
-            taskForUpdate.setDescription(taskForUpdate.getDescription());
+            taskForUpdate.setDescription(task.getDescription());
             taskForUpdate.setCreatedAt(task.getCreatedAt());
             taskForUpdate.setUpdatedAt(Instant.now());
             taskForUpdate.setStatus(task.getStatus());
@@ -50,9 +57,9 @@ public class TaskService {
             taskForUpdate.setAssigneeId(task.getAssigneeId());
             taskForUpdate.setObserverIds(task.getObserverIds());
 
-            Mono<Task> taskToSave = taskRepository.save(task);
+            Mono<Task> taskToSave = taskRepository.save(taskForUpdate);
 
-            return taskHandler.handleTask(task, taskToSave);
+            return  taskHandler.handleTask(taskForUpdate, taskToSave);
         });
     }
 
@@ -63,7 +70,7 @@ public class TaskService {
             task.setObserverIds(observerIds);
 
             Mono<Task> taskMono = taskRepository.save(task);
-            return taskHandler.handleTask(taskMono);
+            return  taskHandler.handleTask(taskMono);
         });
     }
 

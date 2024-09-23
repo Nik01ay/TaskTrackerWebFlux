@@ -35,6 +35,6 @@ public class TaskModel {
 
     private UserModel assignee;
 
-    private Set<UserModel> observers;
+     private Set<UserModel> observers;
 
 }
